@@ -1,0 +1,73 @@
+
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE")
+        classpath('se.transmode.gradle:gradle-docker:1.2')
+    }
+}
+
+plugins {
+    id 'org.detoeuf.swagger-codegen' version '1.6.2'
+}
+
+apply plugin: 'application'
+apply plugin: 'spring-boot'
+apply from: 'swagger.gradle'
+
+bootRun {
+    systemProperties System.properties
+}
+
+bootRepackage {
+    mainClass = 'com.navid.recordserver.springboot.RecordServerSpringboot'
+}
+
+springBoot {
+    mainClass = 'com.navid.recordserver.springboot.RecordServerSpringboot'
+}
+
+configurations {
+    all*.exclude group: '', module: 'servlet-api'
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web") {
+        exclude module: "spring-boot-starter-tomcat"
+    }
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    runtime 'org.springframework.boot:spring-boot-starter-jetty'
+    compile 'com.google.guava:guava:18.0'
+
+    swaggerApi (group:"com.navid.usermanager", name: 'contract', version:"${supported_api_version}", ext:"yml")
+}
+
+def ci_branch = "UNSET"
+def ci_commit = "UNSET"
+def ci_system = "LOCAL"
+def ci_commit_short = "UNSET"
+def ci_build_number = 0
+if (System.getenv("TRAVIS")) {
+    ci_branch = System.getenv("TRAVIS_BRANCH")
+    ci_commit = System.getenv("TRAVIS_COMMIT")
+    ci_system = "travis"
+    ci_commit_short = System.getenv("TRAVIS_COMMIT")
+    ci_build_number = System.getenv("TRAVIS_BUILD_NUMBER")
+}
+
+version = "${ci_system}_${ci_build_number}"
+
+processResources {
+    filesMatching('**/application.properties') {
+        expand( COMMIT: ci_commit,
+                BRANCH: ci_branch,
+                COMMIT_SHORT: ci_commit_short,
+                PIPELINE_COUNTER: ci_build_number,
+                VERSION: project.version,
+                SUPPORTED_API: project.supported_api_version
+        )
+    }
+}

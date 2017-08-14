@@ -1,0 +1,44 @@
+description = 'contract'
+
+buildscript {
+    repositories { jcenter() }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
+    }
+}
+
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'maven-publish'
+
+version = '0.0.1'
+
+bintray {
+    user = repositoryUser
+    key = repositoryPass
+    publications = ['swagger']
+
+    publish = true
+
+    pkg {
+        repo = 'maven'
+        name = "usermanager"
+        desc = project.description
+        licenses = ['Apache-2.0']
+        vcsUrl = 'https://github.com/albertonavarro/usermanager'
+        labels = ["api"]
+    }
+}
+
+publish.dependsOn bintrayUpload
+
+publishing {
+    publications {
+        swagger(MavenPublication) {
+            artifact file("src/main/swagger/swagger-usermanager.yml")
+            artifactId "contract"
+            groupId project.group
+            version project.version
+        }
+    }
+
+}

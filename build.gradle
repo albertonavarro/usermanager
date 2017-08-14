@@ -1,0 +1,31 @@
+allprojects {
+    apply plugin: 'maven'
+
+    group = 'com.navid.usermanager'
+    version = '0.0.1'
+}
+
+subprojects {
+    apply plugin: 'java'
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    task packageSources(type: Jar) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    artifacts.archives packageSources
+
+    repositories {
+        mavenLocal()
+        jcenter()
+        maven { url "http://repo.maven.apache.org/maven2" }
+        maven { url "http://dl.bintray.com/albertonavarro/maven" }
+        maven { url "http://dl.bintray.com/jmonkeyengine/com.jme3" }
+        maven {
+            url 'http://nifty-gui.sourceforge.net/nifty-maven-repo'
+        }
+
+    }
+}
