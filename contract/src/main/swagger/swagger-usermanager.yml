@@ -1,6 +1,6 @@
 swagger: '2.0'
 info:
-  version: 2.0.4
+  version: @version@
   title: Recordserver
   description: TODO
 host: recordserver.trafalgar.ws:8080
