@@ -1,3 +1,10 @@
+buildscript {
+    dependencies {
+        classpath "gradle.plugin.com.boxfuse.client:flyway-release:4.2.0"
+    }
+}
+
+
 apply plugin: "java"
 apply plugin: "org.flywaydb.flyway"
 
