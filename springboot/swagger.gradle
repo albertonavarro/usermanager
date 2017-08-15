@@ -1,6 +1,6 @@
-
 configurations {
     swaggerApi
+    swaggerCompile.extendsFrom compile
 }
 
 task copySwaggerFiles(type: Copy) {
@@ -44,10 +44,10 @@ ext {
 }
 
 dependencies {
-    swaggerCompile 'io.swagger:swagger-annotations:1.5.9'
-    swaggerCompile ('org.springframework.boot:spring-boot-starter-web')
-    swaggerCompile "io.springfox:springfox-swagger2:${springfoxVersion}"
-    swaggerCompile "io.springfox:springfox-swagger-ui:${springfoxVersion}"
+    compile 'io.swagger:swagger-annotations:1.5.9'
+    compile ('org.springframework.boot:spring-boot-starter-web')
+    compile "io.springfox:springfox-swagger2:${springfoxVersion}"
+    compile "io.springfox:springfox-swagger-ui:${springfoxVersion}"
 }
 
 tasks.assemble.dependsOn swaggerClasses

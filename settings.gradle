@@ -8,16 +8,12 @@
  * in the user guide at https://docs.gradle.org/3.3/userguide/multi_project_builds.html
  */
 
-/*
-// To declare projects as part of a multi-project build use the 'include' method
-include 'shared'
-include 'api'
-include 'services:webservice'
-*/
-
 rootProject.name = 'usermanager'
 include ':contract'
-project(':contract').projectDir = "$rootDir/contract" as File
 include 'springboot'
+include 'flyway'
+
+project(':contract').projectDir = "$rootDir/contract" as File
 project(':springboot').projectDir = "$rootDir/springboot" as File
-include 'deploy_tools'
+project(':flyway').projectDir = "$rootDir/flyway" as File
+

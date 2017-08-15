@@ -1,16 +1,10 @@
-description = 'contract'
 
-buildscript {
-    repositories { jcenter() }
-    dependencies {
-        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7'
-    }
-}
-
+apply plugin: 'maven'
+apply plugin: 'java'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'maven-publish'
 
-version = '0.0.3'
+description = 'contract'
 
 bintray {
     user = repositoryUser
@@ -37,7 +31,7 @@ publishing {
             artifact file("build/resources/main/swagger-usermanager.yml")
             artifactId "contract"
             groupId project.group
-            version project.version
+            version project.api_version
         }
     }
 }
@@ -47,6 +41,6 @@ import org.apache.tools.ant.filters.ReplaceTokens
 processResources {
     with copySpec {
         from 'src/main/swagger'
-        filter(ReplaceTokens, tokens: [version: project.version])
+        filter(ReplaceTokens, tokens: [version: project.api_version])
     }
 }
