@@ -14,41 +14,43 @@ buildscript {
 }
 
 
-task waitUntilDeployed << {
-    println 'waitUntilDeployed'
+task waitUntilDeployed  {
+    doLast {
+        println 'waitUntilDeployed'
 
-    def http = new groovyx.net.http.HTTPBuilder(deploy_endpoint)
-    int counter = deploy_tries.toInteger()
+        def http = new groovyx.net.http.HTTPBuilder(deploy_endpoint)
+        int counter = deploy_tries.toInteger()
 
-    def found = false
+        def found = false
 
-    while (!found && counter-- > 0) {
-        println "trying $counter"
-        try{
-            http.request(GET, JSON) {
-                response.success = { resp, reader ->
-                    println "found version $reader.app.version, expected $deploy_expected_version"
-                    if(reader.app.version.equals(deploy_expected_version)){
-                        found = true
+        while (!found && counter-- > 0) {
+            println "trying $counter"
+            try {
+                http.request(GET, JSON) {
+                    response.success = { resp, reader ->
+                        println "found version $reader.app.version, expected $deploy_expected_version"
+                        if (reader.app.version.equals(deploy_expected_version)) {
+                            found = true
+                        }
+                    }
+                    response.failure = { fail ->
+                        println "received error $fail.status"
                     }
                 }
-                response.failure = { fail ->
-                    println "received error $fail.status"
-                }
+            } catch (Exception e) {
+                println "captured error $e.message"
             }
-        } catch (Exception e) {
-            println "captured error $e.message"
+
+            if (found) {
+                break
+            } else {
+                sleep(deploy_sleep.toLong())
+            }
         }
 
-        if(found) {
-            break
-        } else {
-            sleep(deploy_sleep.toLong())
+        if (!found) {
+            throw new RuntimeException("deployment not found")
         }
-    }
-
-    if ( ! found){
-        throw new RuntimeException("deployment not found")
     }
 
 }

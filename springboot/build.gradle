@@ -5,17 +5,16 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.4.2.RELEASE")
         classpath('se.transmode.gradle:gradle-docker:1.2')
     }
 }
 
 plugins {
-    id 'org.detoeuf.swagger-codegen' version '1.6.2'
+    id 'application'
+    id 'org.detoeuf.swagger-codegen' version '1.7.4'
+    id 'org.springframework.boot' version '1.5.6.RELEASE'
 }
 
-apply plugin: 'application'
-apply plugin: 'spring-boot'
 apply from: 'swagger.gradle'
 
 bootRun {

@@ -11,8 +11,8 @@ task copySwaggerFiles(type: Copy) {
 swagger {
     inputSpec = "${buildDir}/swagger-files/contract-${supported_api_version}.yml"
 
-    output = 'build/swagger'
-    language = 'spring'
+    outputDir = file('build/swagger')
+    lang = 'spring'
 
     additionalProperties = [
             'invokerPackage' : 'com.navid.codegen.recordserver',
