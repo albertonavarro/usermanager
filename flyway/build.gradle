@@ -1,7 +1,7 @@
 buildscript {
     dependencies {
         classpath "gradle.plugin.com.boxfuse.client:flyway-release:4.2.0"
-        classpath 'com.h2database:h2:1.4.191'
+        classpath 'org.mariadb.jdbc:mariadb-java-client:2.1.0'
     }
 }
 
@@ -10,11 +10,11 @@ apply plugin: "java"
 apply plugin: "org.flywaydb.flyway"
 
 flyway {
-    driver = 'org.hsqldb.jdbcDriver'
-    url = 'jdbc:hsqldb:file:/db/flyway_sample;shutdown=true'
-    user = 'SA'
-    password = 'mySecretPwd'
-    schemas = ['schema1', 'schema2', 'schema3']
+    driver = 'org.mariadb.jdbc.Driver'
+    url = 'jdbc:mysql://localhost:3306/db1'
+    user = 'nonroot'
+    password = 'nonrootpass'
+    schemas = ['db1']
     //callbacks = ['com.mycompany.proj.CustomCallback', 'com.mycompany.proj.AnotherCallback']
     locations = ['filesystem:db.d/']
     skipDefaultCallbacks = false
