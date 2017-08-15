@@ -1,6 +1,7 @@
 buildscript {
     dependencies {
         classpath "gradle.plugin.com.boxfuse.client:flyway-release:4.2.0"
+        classpath 'com.h2database:h2:1.4.191'
     }
 }
 
@@ -14,7 +15,8 @@ flyway {
     user = 'SA'
     password = 'mySecretPwd'
     schemas = ['schema1', 'schema2', 'schema3']
-    callbacks = ['com.mycompany.proj.CustomCallback', 'com.mycompany.proj.AnotherCallback']
+    //callbacks = ['com.mycompany.proj.CustomCallback', 'com.mycompany.proj.AnotherCallback']
+    locations = ['filesystem:db.d/']
     skipDefaultCallbacks = false
     cleanDisabled = false
 }
