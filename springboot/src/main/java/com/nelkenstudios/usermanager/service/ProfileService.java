@@ -10,7 +10,9 @@ import com.nelkenstudios.usermanager.domain.Profile;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -20,11 +22,13 @@ import java.util.Optional;
 public class ProfileService {
     private final List<Profile> profiles;
 
-    private final Path PROFILES_FILE = Paths.get(this.getClass().getResource("/profiles.json").toURI());
+
+
+    private final InputStream PROFILES_FILE = this.getClass().getResourceAsStream("/profiles.json");
 
     public ProfileService() throws IOException, URISyntaxException {
         ObjectMapper objectMapper = new ObjectMapper().configure(JsonGenerator.Feature.IGNORE_UNKNOWN, true).configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        profiles = objectMapper.readValue(PROFILES_FILE.toFile(), new TypeReference<List<Profile>>() {
+        profiles = objectMapper.readValue(PROFILES_FILE, new TypeReference<List<Profile>>() {
         });
     }
 

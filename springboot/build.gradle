@@ -2,6 +2,7 @@ buildscript {
     dependencies {
         classpath "gradle.plugin.org.detoeuf:swagger-codegen-plugin:1.7.4"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:1.5.6.RELEASE"
+        classpath('se.transmode.gradle:gradle-docker:1.2')
     }
 }
 
@@ -10,7 +11,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: "org.detoeuf.swagger-codegen"
 apply plugin: "org.springframework.boot"
-
+apply from: 'docker.gradle'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -27,11 +28,11 @@ bootRun {
 }
 
 bootRepackage {
-    mainClass = 'com.nelkenstudios.usermanager.Application'
+    mainClass = 'com.nelkenstudios.usermanager.SimpleApplication'
 }
 
 springBoot {
-    mainClass = 'com.nelkenstudios.usermanager.Application'
+    mainClass = 'com.nelkenstudios.usermanager.SimpleApplication'
 }
 
 configurations {
@@ -54,8 +55,13 @@ dependencies {
 
     compile 'org.springframework.security.oauth:spring-security-oauth2'
     compile 'org.springframework.security:spring-security-jwt'
-
+    compile 'org.springframework.boot:spring-boot-starter-security'
     compile 'io.jsonwebtoken:jjwt:0.6.0'
+    // https://mvnrepository.com/artifact/org.springframework.social/spring-social-config
+    compile group: 'org.springframework.social', name: 'spring-social-facebook'
+    compile 'org.springframework.security.oauth:spring-security-oauth2'
+    compile 'org.springframework.boot:spring-boot-starter-freemarker'
+
 }
 
 def ci_branch = "UNSET"
