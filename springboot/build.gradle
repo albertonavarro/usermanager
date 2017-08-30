@@ -12,6 +12,7 @@ apply plugin: 'maven'
 apply plugin: "org.detoeuf.swagger-codegen"
 apply plugin: "org.springframework.boot"
 apply from: 'docker.gradle'
+apply plugin: 'checkstyle'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -48,6 +49,7 @@ dependencies {
     }
     compile("org.springframework.boot:spring-boot-starter-actuator")
     runtime 'org.springframework.boot:spring-boot-starter-jetty'
+    compile 'org.springframework.boot:spring-boot-starter-freemarker'
     compile 'com.google.guava:guava:18.0'
 
     swaggerApi (group:"com.navid.usermanager", name: 'contract', version:"${supported_api_version}", ext:"yml")
@@ -78,4 +80,9 @@ processResources {
                 SUPPORTED_API: project.supported_api_version
         )
     }
+}
+
+checkstyleMain {
+    configFile = new File("../code_quality/sun_checks.xml")
+    excludes = [ "**/codegen/**", "**/swagger/**"]
 }
