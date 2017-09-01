@@ -2,17 +2,24 @@ buildscript {
     dependencies {
         classpath "gradle.plugin.org.detoeuf:swagger-codegen-plugin:1.7.4"
         classpath "org.springframework.boot:spring-boot-gradle-plugin:1.5.6.RELEASE"
-        classpath('se.transmode.gradle:gradle-docker:1.2')
+        classpath 'se.transmode.gradle:gradle-docker:1.2'
+        classpath 'com.palantir:jacoco-coverage:0.4.0'
     }
 }
 
 apply plugin: 'application'
 apply plugin: 'java'
-apply plugin: 'maven'
-apply plugin: "org.detoeuf.swagger-codegen"
 apply plugin: "org.springframework.boot"
-apply from: 'docker.gradle'
+apply plugin: "org.detoeuf.swagger-codegen"
+apply plugin: 'maven'
+apply plugin: "groovy" //spock (tests)
 apply plugin: 'checkstyle'
+apply plugin: 'com.palantir.jacoco-coverage'
+
+apply from: 'docker.gradle'
+apply from: 'swagger.gradle'
+apply from: 'component-test.gradle'
+
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -36,13 +43,6 @@ springBoot {
     mainClass = 'com.nelkenstudios.usermanager.Application'
 }
 
-configurations {
-    all*.exclude group: '', module: 'servlet-api'
-}
-
-
-apply from: 'swagger.gradle'
-
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web") {
         exclude module: "spring-boot-starter-tomcat"
@@ -53,6 +53,10 @@ dependencies {
     compile 'com.google.guava:guava:18.0'
 
     swaggerApi (group:"com.navid.usermanager", name: 'contract', version:"${supported_api_version}", ext:"yml")
+
+    testCompile "org.codehaus.groovy:groovy-all:2.4.10"
+    testCompile "org.spockframework:spock-core:1.1-groovy-2.4"
+    testCompile 'com.athaydes:spock-reports:1.2.7'
 }
 
 def ci_branch = "UNSET"
@@ -90,3 +94,14 @@ checkstyleMain {
 checkstyle {
     sourceSets = [project.sourceSets.main]
 }
+
+jacocoCoverage {
+
+    // Whitelist files named MyClass.java from coverage requirements.
+    fileThreshold 0.0, "*.java"
+}
+
+test {
+    testLogging.showStandardStreams = true
+}
+
